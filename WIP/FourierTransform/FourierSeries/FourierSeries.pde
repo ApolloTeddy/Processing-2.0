@@ -2,6 +2,8 @@ import CiSlib.*;
 
 double S = 0.01; // speed constant
 
+ArrayList<CNum> in;
+
 CNum[] input, dft;
 void setup() {
   size(600, 600);
@@ -9,34 +11,41 @@ void setup() {
   noFill();
   ellipseMode(RADIUS);
   
-  ArrayList<CNum> in = new ArrayList();
+  in = new ArrayList();
   
-  in.add(CiSMath.fromCart(10, 0));
-  in.add(CiSMath.fromCart(10 + 30*cos(10), 30*sin(10)));
-  in.add(CiSMath.fromCart(10 + 30*cos(10) + 30*cos(50), 10*sin(10) + 10*sin(50)));
+  CNum tot = CiSMath.fromCart(0, 0);
+  for(int i = 0; i < 20; i++) {
+    double th = random(0, TAU), am = 10;
+    in.add(tot.clone());
+    tot.add(CiSMath.fromCart(am*Math.cos(th), am*Math.sin(th)));
+  }
+  
   dft = CiSMath.DFT(in.toArray(new CNum[in.size()]));
   quicksort(dft, 0, dft.length-1);
 }
 
 double t = 0;
 void draw() {
-  background(60);
+  background(60); 
   translate(width/2, height/2);
   
-  int N = dft.length;
+  for(var e : in) {
+    double[] inf = e.get();
+    strokeWeight(2);
+    point((float)inf[0], (float)inf[1]);
+  }
+  
+  int N = dft.length-1;
   CNum tot = CiSMath.fromCart(0, 0);
-  for(int n = 0; n < N; n++) {
-    CNum coef = dft[n];
-    double info[] = coef.get(), dInf[] = tot.get(), pInf[], th = info[2] + info[4]*t;
+  for(int n = -N; n <= N; n++) {
+    CNum c_n = n < 0 ? dft[-n] : dft[n];
+    double bef[] = tot.get(), aft[];
     
-    tot.add(CiSMath.fromCart(info[3]*Math.cos(th), info[3]*Math.sin(th)));
-    pInf = tot.get();
+    tot.add(CiSMath.mult(c_n, CiSMath.fromPolar(TAU*n*t/N, 1)));
+    aft = tot.get();
     
     strokeWeight(1);
-    circle((float)dInf[0], (float)dInf[1], (float)info[3]);
-    line((float)dInf[0], (float)dInf[1], (float)pInf[0], (float)pInf[1]);
-    strokeWeight(4);
-    point((float)pInf[0], (float)pInf[1]);
+    circle((float)bef[0], (float)bef[1], (float)c_n.get()[3]);
   }
   
   t += N/TAU*S;
