@@ -6,7 +6,7 @@ void setup() {
   size(200, 200);
   frameRate(4);
   a = CiSMath.fromCart(width/4, 0);
-  b = CiSMath.rootOfUnity(4);
+  b = CiSMath.rootOfUnity(60);
 }
 
 void draw() {
@@ -16,7 +16,7 @@ void draw() {
   float[] aI = a.get();
   line(0, 0, aI[0], aI[1]);
   
-  a.mult(b);
+  a.mult(CiSMath.i);
 }
 
 void mousePressed() {
