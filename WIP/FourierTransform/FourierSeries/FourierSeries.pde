@@ -19,7 +19,7 @@ void setup() {
   in = new ArrayList();
   
   CNum tot = CiSMath.fromCart(0, 0);
-  double th = random(0, TAU), tol = TAU/38  , am = 0.1;
+  double th = random(0, TAU), tol = TAU/38  , am = 0.025;
   for(int i = 0; i < 6000; i++) {
     in.add(tot.clone());
     tot.add(CiSMath.fromCart(am*Math.cos(th), am*Math.sin(th)));
@@ -36,7 +36,7 @@ void mouseDragged() {
 }
 
 void mouseWheel(MouseEvent e) {
-  cam.loZoom = e.getCount() > 0 ? cam.loZoom - 0.25 : cam.loZoom + 0.25;
+  cam.loZoom = e.getCount() > 0 ? cam.loZoom - 0.5 : cam.loZoom + 0.5;
   println(cam.loZoom);
 }
 
@@ -52,12 +52,16 @@ void keyPressed() {
     cam.loZoom = 75;
   } else if(key == 'x' || key == 'X') {
     cam.loZoom = 1;
+  } else if(key == 'e' || key == 'E') {
+    t = (in.size() - 250)*TAU/in.size();
+  } else if(key == 'b' || key == 'B') {
+    t = 0;
   }
 }
 
 double t = 0;
 void draw() {
-  background(60);
+  background(20);
   cam.update();
   double[]camInf = cam.pos.get(), camInf2 = cam.anchor.get();
   translate((float)(camInf[0]+camInf2[0]), (float)(camInf[1]+camInf2[1]));
@@ -79,10 +83,10 @@ void draw() {
     aft = tot.get();
     
     strokeWeight(0.05);
-    stroke(70);
+    stroke(25);
     if(inf[3] > 1) circle((float)bef[0], (float)bef[1], (float)inf[3]);
     strokeWeight(0.05);
-    stroke(0);
+    stroke(40);
     line((float)bef[0], (float)bef[1], (float)aft[0], (float)aft[1]);
     //point((float)aft[0], (float)aft[1]);
   }
@@ -92,9 +96,8 @@ void draw() {
   strokeWeight(0.1);
   stroke(0, 0, 100);
   point((float)tmpInf[0], (float)tmpInf[1]);
-  
   //t = (t + N/TAU*S)%N;
-  if(frameCount%Sp == 0) t = (t + TAU/N)%N;
+  if(frameCount%Sp == 0) t = (t + TAU/N)%TAU;
 }
 
 void quicksort(CNum[] arr, int low, int high) {
@@ -144,6 +147,6 @@ class Cam {
     this.acc.setP(0, 0);
     this.vel.mult(0.75);
     this.loZoom = loZoom >= 75 ? 75 : loZoom;
-    this.loZoom = loZoom <= 0.15 ? 0.15 : loZoom;
+    this.loZoom = loZoom <= 3.25 ? 3.25 : loZoom;
   } 
 }
