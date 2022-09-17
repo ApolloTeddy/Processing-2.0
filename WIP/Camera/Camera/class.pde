@@ -11,9 +11,8 @@ class Cam {
   }
   
   void fixate(CNum pos) { // D = T - P : S = D - V
-    double zoomCoef = 1/(2*loZoom);
     CNum t = pos.clone();
-    t.sub(CiSMath.fromCart(width*zoomCoef, height*zoomCoef));
+    t.sub(CiSMath.fromCart(width/(2*loZoom), height/(2*loZoom)));
     this.anchor = CiSMath.mult(t, -loZoom);
   }
   
@@ -25,6 +24,6 @@ class Cam {
     this.acc.setP(0, 0);
     this.vel.mult(0.75);
     this.loZoom = loZoom >= 3 ? 3 : loZoom;
-    this.loZoom = loZoom <= 0.15 ? 0.15 : loZoom;
+    this.loZoom = loZoom <= 0.25 ? 0.25 : loZoom;
   } 
 }
