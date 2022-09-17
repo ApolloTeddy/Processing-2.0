@@ -2,6 +2,8 @@ import CiSlib.*;
 
 Cam cam;
 
+double Sp = 2; // Speed constant
+
 ArrayList<CNum> in;
 CNum[] input, dft;
 
@@ -16,8 +18,8 @@ void setup() {
   in = new ArrayList();
   
   CNum tot = CiSMath.fromCart(0, 0);
-  double th = random(0, TAU), tol = TAU/18  , am = 0.25;
-  for(int i = 0; i < 600; i++) {
+  double th = random(0, TAU), tol = TAU/38  , am = 0.1;
+  for(int i = 0; i < 6000; i++) {
     in.add(tot.clone());
     tot.add(CiSMath.fromCart(am*Math.cos(th), am*Math.sin(th)));
     
@@ -47,7 +49,7 @@ void draw() {
   
   for(int i = 0; i < in.size(); i++) {
     double[] inf = in.get(i).get();
-    strokeWeight(1);
+    strokeWeight(0.2);
     stroke(map(i, 0, in.size(), 0, 100), 100, 100);
     point((float)inf[0], (float)inf[1]);
   }
@@ -63,18 +65,17 @@ void draw() {
     strokeWeight(0.05);
     stroke(0);
     line((float)bef[0], (float)bef[1], (float)aft[0], (float)aft[1]);
-    strokeWeight(1);
     //point((float)aft[0], (float)aft[1]);
   }
   cam.fixate(tot);
   
   double[] tmpInf = tot.get();
-  strokeWeight(0.2);
+  strokeWeight(0.1);
   stroke(0, 0, 100);
   point((float)tmpInf[0], (float)tmpInf[1]);
   
   //t = (t + N/TAU*S)%N;
-  t = (t + TAU/N)%N;
+  if(frameCount%Sp == 0) t = (t + TAU/N)%N;
 }
 
 void quicksort(CNum[] arr, int low, int high) {
@@ -102,7 +103,7 @@ void swap(CNum[] arr, int a, int b) {
 
 class Cam {
   CNum pos, vel, acc, anchor;
-  double maxspeed = 5, loZoom = 3;
+  double maxspeed = 5, loZoom = 45;
   Cam() {
     this.pos = CiSMath.fromPolar(0, 0);
     this.vel = CiSMath.fromPolar(0, 0);
@@ -124,6 +125,6 @@ class Cam {
     this.acc.setP(0, 0);
     this.vel.mult(0.75);
     this.loZoom = loZoom >= 50 ? 50 : loZoom;
-    this.loZoom = loZoom <= 0.05 ? 0.05 : loZoom;
+    this.loZoom = loZoom <= 0.15 ? 0.15 : loZoom;
   } 
 }
