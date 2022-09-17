@@ -2,15 +2,16 @@ import CiSlib.*;
 
 Cam cam;
 
-double Sp = 2; // Speed constant
+double Sp = 1; // Speed constant
 
 ArrayList<CNum> in;
+boolean follow = true;
 CNum[] input, dft;
 
 void setup() {
   size(900, 900);
   cam = new Cam();
-  frameRate(60);
+  //frameRate(60);
   noFill();
   ellipseMode(RADIUS);
   colorMode(HSB, 100, 100, 100);
@@ -35,8 +36,23 @@ void mouseDragged() {
 }
 
 void mouseWheel(MouseEvent e) {
-  cam.loZoom = e.getCount() > 0 ? cam.loZoom - 0.15 : cam.loZoom + 0.15;
+  cam.loZoom = e.getCount() > 0 ? cam.loZoom - 0.25 : cam.loZoom + 0.25;
   println(cam.loZoom);
+}
+
+void mousePressed() {
+  if(mouseButton == CENTER) {
+    if(!follow) cam.pos.setP(0, 0);    
+    follow = !follow;
+  }
+}
+
+void keyPressed() {
+  if(key == 'z' || key == 'Z') {
+    cam.loZoom = 75;
+  } else if(key == 'x' || key == 'X') {
+    cam.loZoom = 1;
+  }
 }
 
 double t = 0;
@@ -63,11 +79,14 @@ void draw() {
     aft = tot.get();
     
     strokeWeight(0.05);
+    stroke(70);
+    if(inf[3] > 1) circle((float)bef[0], (float)bef[1], (float)inf[3]);
+    strokeWeight(0.05);
     stroke(0);
     line((float)bef[0], (float)bef[1], (float)aft[0], (float)aft[1]);
     //point((float)aft[0], (float)aft[1]);
   }
-  cam.fixate(tot);
+  if(follow) cam.fixate(tot);
   
   double[] tmpInf = tot.get();
   strokeWeight(0.1);
@@ -103,7 +122,7 @@ void swap(CNum[] arr, int a, int b) {
 
 class Cam {
   CNum pos, vel, acc, anchor;
-  double maxspeed = 5, loZoom = 45;
+  double maxspeed = 5, loZoom = 50;
   Cam() {
     this.pos = CiSMath.fromPolar(0, 0);
     this.vel = CiSMath.fromPolar(0, 0);
@@ -124,7 +143,7 @@ class Cam {
     
     this.acc.setP(0, 0);
     this.vel.mult(0.75);
-    this.loZoom = loZoom >= 50 ? 50 : loZoom;
+    this.loZoom = loZoom >= 75 ? 75 : loZoom;
     this.loZoom = loZoom <= 0.15 ? 0.15 : loZoom;
   } 
 }

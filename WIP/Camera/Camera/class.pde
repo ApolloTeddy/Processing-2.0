@@ -1,18 +1,20 @@
 import CiSlib.*;
 
 class Cam {
-  CNum pos, vel, acc;
+  CNum pos, vel, acc, anchor;
   double maxspeed = 5, loZoom = 1;
   Cam() {
     this.pos = CiSMath.fromPolar(0, 0);
     this.vel = CiSMath.fromPolar(0, 0);
     this.acc = CiSMath.fromPolar(0, 0);
+    this.anchor = CiSMath.fromPolar(0, 0);
   }
   
-  void follow(CNum pos) { // D = T - P : S = D - V
-    CNum Ste = CiSMath.sub(pos, this.pos).limitMag(10);
-    Ste.sub(this.vel);
-    cam.acc.add(Ste);
+  void fixate(CNum pos) { // D = T - P : S = D - V
+    double zoomCoef = 1/(2*loZoom);
+    CNum t = pos.clone();
+    t.sub(CiSMath.fromCart(width*zoomCoef, height*zoomCoef));
+    this.anchor = CiSMath.mult(t, -loZoom);
   }
   
   void update() {
@@ -22,7 +24,7 @@ class Cam {
     
     this.acc.setP(0, 0);
     this.vel.mult(0.75);
-    this.loZoom = loZoom > 10 ? 10 : loZoom;
-    this.loZoom = loZoom < 0.01 ? 0.01 : loZoom;
+    this.loZoom = loZoom >= 3 ? 3 : loZoom;
+    this.loZoom = loZoom <= 0.15 ? 0.15 : loZoom;
   } 
 }

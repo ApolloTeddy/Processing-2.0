@@ -3,6 +3,7 @@ Cam cam;
 void setup() {
   size(400, 400);
   cam = new Cam();
+  cam.fixate(CiSMath.fromCart(0, 100));
   
   strokeWeight(3);
 }
@@ -19,9 +20,9 @@ void draw() {
   background(60);
   cam.update();
   
-  double[]camInf = cam.pos.get();
-  translate((float)camInf[0], (float)camInf[1]);
+  double[]camInf = cam.pos.get(), camInf2 = cam.anchor.get();
+  translate((float)(camInf[0]+camInf2[0]), (float)(camInf[1]+camInf2[1]));
   scale((float)cam.loZoom);
   
-  circle(0, 0, 100);
+  circle(0, 100, 100);
 }
