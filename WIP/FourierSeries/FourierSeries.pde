@@ -4,20 +4,36 @@ Cam cam;
 
 double Sp = 1; // Speed constant
 
-ArrayList<CNum> in;
+ArrayList<CNum[]> in;
 boolean follow = true;
 CNum[] input, dft;
+PImage ima;
+
+CiSMath grouper;
 
 void setup() {
   size(900, 900);
   cam = new Cam();
+  grouper = new CiSMath();
+  ima = loadImage("testB.png");
+  ima.loadPixels();
+  
   //frameRate(60);
   noFill();
   ellipseMode(RADIUS);
   colorMode(HSB, 100, 100, 100);
   
-  in = new ArrayList();
+  Tree tree = new Tree(new double[]{ima.width/2, ima.height/2, ima.height > ima.width ? ima.height/2 : ima.width/2}, 10);
+  //ArrayList<CNum> locations = new ArrayList<CNum>();
+  for(int n = 0; n < ima.pixels.length; n++) {
+      double x = n%ima.width;
+      if(ima.pixels[n] == color(0)) //locations.add(CiSMath.fromCart(x, (n - x)/ima.width));
+        tree.insert(CiSMath.fromCart(x, (n - x)/ima.width));
+  }
   
+  in = grouper.makeGroups(tree);
+  
+  /*
   CNum tot = CiSMath.fromCart(0, 0);
   double th = random(0, TAU), tol = TAU/38  , am = 0.025;
   for(int i = 0; i < 6000; i++) {
@@ -25,9 +41,9 @@ void setup() {
     tot.add(CiSMath.fromCart(am*Math.cos(th), am*Math.sin(th)));
     
     th += random((float)-tol, (float)tol);
-  }
+  }*/
   
-  dft = CiSMath.FSCDFT(in.toArray(new CNum[in.size()]));
+  dft = CiSMath.FSCDFT(in.toArray(new CNum[CiSMath.len(in)]));
   quicksort(dft, 0, dft.length-1);
 }
 

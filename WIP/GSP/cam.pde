@@ -1,6 +1,6 @@
 class Cam {
   CNum pos, vel, acc, anchor;
-  double maxspeed = 5, loZoom = 1;
+  double maxspeed = 15, loZoom = 1;
   Cam() {
     this.pos = CiSMath.fromPolar(0, 0);
     this.vel = CiSMath.fromPolar(0, 0);

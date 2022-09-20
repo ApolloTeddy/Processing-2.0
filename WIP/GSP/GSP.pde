@@ -12,7 +12,7 @@ void setup() {
   colorMode(HSB, 100, 100, 100);
   cam = new Cam();
   grouper = new CiSMath();
-  ima = loadImage("testA.png");
+  ima = loadImage("testB.png");
   ima.loadPixels();
   
   Tree tree = new Tree(new double[]{ima.width/2, ima.height/2, ima.height > ima.width ? ima.height/2 : ima.width/2}, 10);
@@ -24,18 +24,17 @@ void setup() {
   }
     println(tree.all().length);
     groups = grouper.makeGroups(tree);
+    println(groups.size());
 }
 
 void draw() {
   background(60);
   cam.update();
-  double invZ = 1/cam.loZoom;
-  //cam.fixate(CiSMath.fromCart((mouseX - width/2)*invZ, (mouseY - height/2)*invZ));
   
   double[]camInf = cam.pos.get(), camInf2 = cam.anchor.get();
   translate((float)(camInf[0]+camInf2[0]), (float)(camInf[1]+camInf2[1]));
   scale((float)cam.loZoom);
-  for(int i = 0; i < 2; i++) {
+  for(int i = 0; i < groups.size(); i++) {
     var curgroup = groups.get(i);
     for(var g : curgroup) {
       double[] inf = g.get();
