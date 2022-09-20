@@ -1,9 +1,11 @@
 Cam cam;
 
+
 void setup() {
   size(400, 400);
   cam = new Cam();
   strokeWeight(3);
+  cam.fixate(CiSMath.fromCart(0, 0));
 }
 
 void mouseDragged() {
@@ -25,11 +27,11 @@ void keyPressed() {
 void draw() {
   background(60);
   cam.update();
-  double invZ = 1/cam.loZoom;
-  cam.fixate(CiSMath.fromCart((mouseX - width/2)*invZ, (mouseY - height/2)*invZ)`);
+  //double invZ = 1/cam.loZoom;
+  //cam.fixate(CiSMath.fromCart((mouseX - width/2)*invZ, (mouseY - height/2)*invZ)`);
   
   double[]camInf = cam.pos.get(), camInf2 = cam.anchor.get();
-  translate((float)(camInf[0]+camInf2[0]), (float)(camInf[1]+camInf2[1]));
+  translate((float)(camInf[0]-camInf2[0]), (float)(camInf[1]-camInf2[1]));
   scale((float)cam.loZoom);
   
   circle(0, 0, 100);
