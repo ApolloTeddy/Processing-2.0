@@ -12,7 +12,7 @@ void setup() {
   colorMode(HSB, 100, 100, 100);
   cam = new Cam();
   grouper = new CiSMath();
-  ima = loadImage("testB.png");
+  ima = loadImage("testF.png");
   ima.loadPixels();
   
   Tree tree = new Tree(new double[]{ima.width/2, ima.height/2, ima.height > ima.width ? ima.height/2 : ima.width/2}, 10);
@@ -23,7 +23,7 @@ void setup() {
         tree.insert(CiSMath.fromCart(x, (n - x)/ima.width));
   }
     println(tree.all().length);
-    groups = grouper.makeGroups(tree, 10000);
+    groups = grouper.makeGroups(tree, 0);
     println(groups.size());
 }
 
@@ -40,7 +40,7 @@ void draw() {
       double[] inf = curgroup[j].get();
       
       strokeWeight(2);
-      stroke(0, 0, map(j, 0, curgroup.length, 0, 100));
+      stroke(map(i, 0, groups.size(), 0, 100), 100, 100);
       point((float)inf[0], (float)inf[1]);
     }
   }
