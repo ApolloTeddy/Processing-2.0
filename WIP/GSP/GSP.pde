@@ -23,7 +23,7 @@ void setup() {
         tree.insert(CiSMath.fromCart(x, (n - x)/ima.width));
   }
     println(tree.all().length);
-    groups = grouper.makeGroups(tree);
+    groups = grouper.makeGroups(tree, 10000);
     println(groups.size());
 }
 
@@ -36,11 +36,11 @@ void draw() {
   scale((float)cam.loZoom);
   for(int i = 0; i < groups.size(); i++) {
     var curgroup = groups.get(i);
-    for(var g : curgroup) {
-      double[] inf = g.get();
+    for(int j = 0; j < curgroup.length; j++) {
+      double[] inf = curgroup[j].get();
       
       strokeWeight(2);
-      stroke(map(i, 0, groups.size(), 0, 100), 100, 100);
+      stroke(0, 0, map(j, 0, curgroup.length, 0, 100));
       point((float)inf[0], (float)inf[1]);
     }
   }
